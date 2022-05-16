@@ -8,9 +8,9 @@
 
 **注:**
 
-**AI Studio多卡项目地址: []().**
+**AI Studio多卡项目地址: [https://aistudio.baidu.com/aistudio/clusterprojectdetail/3496916](https://aistudio.baidu.com/aistudio/clusterprojectdetail/3496916).**
 
-**AI Studio单卡项目地址: []().**
+**AI Studio单卡项目地址: [https://aistudio.baidu.com/aistudio/projectdetail/3496946](https://aistudio.baidu.com/aistudio/projectdetail/3496946).**
 
 **您可以使用[AI Studio](https://aistudio.baidu.com/)平台在线运行该项目!**
 
@@ -26,9 +26,9 @@
 
 > 本项目验证其在图文检索`Image-Text Retrieval`下游任务中的性能，所使用的数据集为[Flickr30K](http://shannon.cs.illinois.edu/DenotationGraph/data/index.html)，复现精度如下。
 
-| 指标 | 原论文 | 复现精度 | 
-| :---: | :---: | :---: | 
-| IR-flickr30K-R1 | 73.66 | 73.66 |
+| 指标 | 原论文 | 复现精度 |
+| :---: | :---: | :---: |
+| IR-flickr30K-R1 | 73.66 | 74.02 |
 
 
 ## 三、数据集
@@ -65,10 +65,10 @@ pip install -r requirements.txt
 
 ```bash
 # 相关数据集已上传至Aistudio
-# 详情见: 
+# 详情见: https://aistudio.baidu.com/aistudio/datasetdetail/128538
 
 # paddle格式的预训练权重也已上传至Aistudio
-# 详情见: 
+# 详情见: https://aistudio.baidu.com/aistudio/datasetdetail/128538
 
 # 下载或挂载数据集和预训练权重之后
 # 需要修改配置文件(configs/retrieval_train.yaml和configs/retrieval_test.yaml的一些参数:
@@ -93,7 +93,7 @@ python tools/eval_retrieval.py --cfg_file configs/retrieval_test.yaml
 
 ```bash
 # 下载训练好的模型权重
-# 
+# https://aistudio.baidu.com/aistudio/datasetdetail/129717
 # 执行Step5进行测试
 ```
 
@@ -109,14 +109,14 @@ python tools/eval_retrieval.py --cfg_file configs/retrieval_test.yaml
 │   └── retrieval_dataset.py  # 数据加载
 ├── models
 │   └── bert.py               # bert模型
-│   └── oscar.py              # oscar模型
+│   └── uniter.py             # uniter模型
+│   └── uniter_retrieval.py   # uniter模型
 ├── solvers
 │   └── optimizer.py          # 优化器
 │   └── scheduler.py          # 学习率策略
-├── tests                     # 测试文件
 ├── tools
-│   └── train_retrieval.py    # 训练脚本
-│   └── eval_retrieval.py     # 测试脚本
+│   └── finetune_retrieval.py # 训练脚本
+│   └── evaluate_retrieval.py # 测试脚本
 └── requirement.txt           # 依赖包
 ```
 
@@ -127,8 +127,8 @@ python tools/eval_retrieval.py --cfg_file configs/retrieval_test.yaml
 |   信息   |                             说明                             |
 | :------: | :----------------------------------------------------------: |
 |  发布者  |                           fuqianya                           |
-|   时间   |                           2022.02                            |
+|   时间   |                           2022.05                            |
 | 框架版本 |                         Paddle 2.2.1                         |
 | 应用场景 |                            多模态                            |
 | 支持硬件 |                           GPU、CPU                           |
-| 下载链接 | [预训练模型]() \| [训练日志]() |
+| 下载链接 | [预训练模型](https://aistudio.baidu.com/aistudio/datasetdetail/129717) \| [训练日志](https://aistudio.baidu.com/aistudio/datasetdetail/129717) |
