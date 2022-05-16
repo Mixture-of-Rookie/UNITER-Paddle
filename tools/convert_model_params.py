@@ -1,8 +1,8 @@
 import torch
 import paddle
 
-pretrained_torch_model = '/mnt/disk2T/Data/Research/Multi-Modal-Pretraining/2020-UNITER-ECCV/pretrained/uniter-base.pt'
-converted_model_path = '/mnt/disk2T/Data/Research/Multi-Modal-Pretraining/2020-UNITER-ECCV/pretrained/uniter-base.bin'
+pretrained_torch_model = 'uniter-base.pt'
+converted_model_path = 'uniter-base.bin'
 pretrained_torch_model = torch.load(pretrained_torch_model)
 
 pretrained_paddle_model = {}

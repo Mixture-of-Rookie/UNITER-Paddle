@@ -51,7 +51,7 @@
 
 ```bash
 # clone this repo
-git clone https://github.com/cattidea/UNITER-Paddle.git
+git clone https://github.com/Mixture-of-Rookie/UNITER-Paddle.git
 cd UNITER-Paddle
 ```
 
@@ -79,14 +79,14 @@ pip install -r requirements.txt
 
 ```bash
 export PYTHONPATH=$PWD:$PYTHONPATH
-CUDA_VISIBLE_DEVICES='0, 1, 2, 3' python -m paddle.distributed.launch tools/train_retrieval.py --cfg_file configs/retrieval_train.yaml
+CUDA_VISIBLE_DEVICES='0, 1, 2, 3' python -m paddle.distributed.launch tools/finetune_retrieval.py --cfg_file configs/retrieval_train.yaml
 ```
 
 ### step5: 测试
 
 ```bash
 # 测试之前,需要在configs/retrieval_test.yaml中指定测试的模型 (即修改EVAL-CHECKPOINT_DIR参数).
-python tools/eval_retrieval.py --cfg_file configs/retrieval_test.yaml
+python tools/evaluate_retrieval.py --cfg_file configs/retrieval_test.yaml
 ```
 
 ### 使用预训练模型进行预测

@@ -9,7 +9,6 @@ DATASET:
 
 OUTPUT:
   SAVE_NAME: 'flickr30k_retrieval_large'
-  CHECKPOINT_DIR: 'output/'
 
 OPTIMIZATION:
   LR: 5e-05
