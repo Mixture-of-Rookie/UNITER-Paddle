@@ -1,0 +1,19 @@
+INPUT:
+  MARGIN: 0.2
+  NEG_SIZE: 199
+  HARD_NEG_SIZE: 15
+
+DATASET:
+  IMG_DIR: 'retrieval_flickr30k_data/img_db/flickr30k'
+  TXT_DIR: 'retrieval_flickr30k_data/txt_db'
+
+OPTIMIZATION:
+  DEV_BATCH_SIZE: 400
+
+PRETRAINED:
+  DIR: 'retrieval_flickr30k_data/pretrained'
+  CONFIG: 'uniter-large.json'
+  WEIGHTS: 'uniter-large.bin'
+
+EVAL:
+  CHECKPOINT_DIR: "exp/flickr30k_retrieval_large_22Y_02M_27D_15H/checkpoint-1"

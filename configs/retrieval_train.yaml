@@ -1,0 +1,26 @@
+INPUT:
+  MARGIN: 0.2
+  NEG_SIZE: 199
+  HARD_NEG_SIZE: 15
+
+DATASET:
+  IMG_DIR: 'data/UNITER-flickr30k-ir/img_db/flickr30k'
+  TXT_DIR: 'data/UNITER-flickr30k-ir/txt_db'
+
+OUTPUT:
+  SAVE_NAME: 'flickr30k_retrieval_large'
+  CHECKPOINT_DIR: 'output/'
+
+OPTIMIZATION:
+  LR: 5e-05
+  EPOCHS: 1
+  TRN_BATCH_SIZE: 1
+  DEV_BATCH_SIZE: 400
+  WARMUP_STEPS: 500
+  WEIGHT_DECAY: 0.01
+  GRADIENT_ACCUMULATION_STEPS: 16
+
+PRETRAINED:
+  DIR: 'data/UNITER-flickr30k-ir/pretrained'
+  CONFIG: 'uniter-large.json'
+  WEIGHTS: 'uniter-large.bin'

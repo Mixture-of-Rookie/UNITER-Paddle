@@ -1,0 +1,8 @@
+yacs==0.1.8
+cytoolz
+tqdm
+lmdb
+lz4
+msgpack
+msgpack-numpy
+toolz
