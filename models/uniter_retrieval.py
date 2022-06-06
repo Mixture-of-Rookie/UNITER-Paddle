@@ -12,22 +12,52 @@ from models.uniter import (
     UniterPreTrainedModel,
 )
 
-class UniterForImageTextRetrieval(UniterPreTrainedModel):# {{{
-    """Finetune UNITER for image text retrieval."""
-    def __init__(self, config, img_dim, margin=0.2):
+class UniterForImageTextRetrievalHardNeg(UniterPreTrainedModel):
+    """Finetune UNITER for image text retrieval with harg negative mining."""
+    def __init__(self, config, img_dim, margin=0.2, hard_size=16):
         super().__init__(config)
+        self.margin = margin
+        self.hard_size = hard_size
+
         self.uniter = UniterModel(config, img_dim)
         self.itm_output = nn.Linear(config.hidden_size, 2)
         self.rank_output = nn.Linear(config.hidden_size, 1)
-        self.margin = margin
-        self.apply(self.init_weights)
 
+        self.apply(self.init_weights)
+    
     def init_output(self):
         """Need to be called after from pretrained."""
         self.rank_output.weight.set_value(self.itm_output.weight[:, 1:])
         self.rank_output.bias.set_value(self.itm_output.bias[1:])
 
-    def forward(self, batch, compute_loss=True):
+    def forward(self, batch, sample_from='t', compute_loss=True):
+        # expect same input_ids for all pairs
+        batch_size = batch['attn_masks'].shape[0]
+        input_ids = batch['input_ids']
+        img_feat = batch['img_feat']
+        img_pos_feat = batch['img_pos_feat']
+        if sample_from == 't':
+            if input_ids.shape[0] == 1:
+                batch['input_ids'] = input_ids.expand([batch_size, -1])
+        elif sample_from == 'i':
+            if img_feat.shape[0] == 1:
+                batch['img_feat'] = img_feat.expand([batch_size, -1, -1])
+            if img_pos_feat.shape[0] == 1:
+                batch['img_pos_feat'] = img_pos_feat.expand([batch_size, -1, -1])
+        else:
+            raise ValueError()
+
+        if self.training and compute_loss:
+            with paddle.no_grad():
+                self.eval()
+                scores = self.compute_score(batch, compute_loss=False)
+                hard_batch = self._get_hard_batch(batch, scores, sample_from)
+                self.train()
+            return self.compute_score(hard_batch, compute_loss=True)
+        else:
+            return self.compute_score(batch, compute_loss)
+    
+    def compute_score(self, batch, compute_loss=True):
         batch = defaultdict(lambda: None, batch)
         img_feat = batch['img_feat']
         input_ids = batch['input_ids']
@@ -52,41 +82,7 @@ class UniterForImageTextRetrieval(UniterPreTrainedModel):# {{{
             rank_loss = paddle.clip(self.margin + neg - pos, 0)
             return rank_loss.mean()
         else:
-            return rank_scores# }}}
-
-
-class UniterForImageTextRetrievalHardNeg(UniterForImageTextRetrieval):# {{{
-    """Finetune UNITER for image text retrieval with harg negative mining."""
-    def __init__(self, config, img_dim, margin=0.2, hard_size=16):
-        super().__init__(config, img_dim, margin)
-        self.hard_size = hard_size
-
-    def forward(self, batch, sample_from='t', compute_loss=True):
-        # expect same input_ids for all pairs
-        batch_size = batch['attn_masks'].shape[0]
-        input_ids = batch['input_ids']
-        img_feat = batch['img_feat']
-        img_pos_feat = batch['img_pos_feat']
-        if sample_from == 't':
-            if input_ids.shape[0] == 1:
-                batch['input_ids'] = input_ids.expand([batch_size, -1])
-        elif sample_from == 'i':
-            if img_feat.shape[0] == 1:
-                batch['img_feat'] = img_feat.expand([batch_size, -1, -1])
-            if img_pos_feat.shape[0] == 1:
-                batch['img_pos_feat'] = img_pos_feat.expand([batch_size, -1, -1])
-        else:
-            raise ValueError()
-
-        if self.training and compute_loss:
-            with paddle.no_grad():
-                self.eval()
-                scores = super().forward(batch, compute_loss=False)
-                hard_batch = self._get_hard_batch(batch, scores, sample_from)
-                self.train()
-            return super().forward(hard_batch, compute_loss=True)
-        else:
-            return super().forward(batch, compute_loss)
+            return rank_scores
 
     def _get_hard_batch(self, batch, scores, sample_from='t'):
         batch = defaultdict(lambda: None, batch)
@@ -134,4 +130,4 @@ class UniterForImageTextRetrievalHardNeg(UniterForImageTextRetrieval):# {{{
         hard_batch['attn_masks'] = attention_mask
         hard_batch['gather_index'] = gather_index
 
-        return hard_batch# }}}
+        return hard_batch

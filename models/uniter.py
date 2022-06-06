@@ -195,7 +195,9 @@ class UniterTextEmbeddings(nn.Layer):# {{{
 
     def forward(self, input_ids, position_ids, token_type_ids=None):
         if token_type_ids is None:
-            token_type_ids = paddle.zeros_like(input_ids)
+            token_type_ids = paddle.zeros(shape=input_ids.shape,
+                                          dtype='int64')
+            # token_type_ids = paddle.zeros_like(input_ids)
 
         words_embeddings = self.word_embeddings(input_ids)
         position_embeddings = self.position_embeddings(position_ids)
