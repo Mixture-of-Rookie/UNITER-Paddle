@@ -42,7 +42,7 @@ class BertSelfAttention(nn.Layer):# {{{
         self.dropout = nn.Dropout(config.attention_probs_dropout_prob)
 
     def transpose_for_scores(self, x):
-        new_x_shape = x.shape[:-1] + [
+        new_x_shape = list(x.shape[:-1]) + [
             self.num_attention_heads,
             self.attention_head_size,
         ]
@@ -73,7 +73,7 @@ class BertSelfAttention(nn.Layer):# {{{
 
         context_layer = paddle.matmul(attention_probs, value_layer)
         context_layer = context_layer.transpose((0, 2, 1, 3))
-        new_context_layer_shape = context_layer.shape[:-2] + [self.all_head_size,]
+        new_context_layer_shape = list(context_layer.shape[:-2]) + [self.all_head_size,]
         context_layer = context_layer.reshape(shape=new_context_layer_shape)
 
         return context_layer# }}}

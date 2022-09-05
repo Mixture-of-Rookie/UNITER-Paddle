@@ -103,7 +103,7 @@ def export(args, cfg):
             'gather_index': InputSpec(shape=[1, 100], dtype='int64'),
             },
             't',
-            True
+            False,
         ])
     # save inference model
     paddle.jit.save(model, os.path.join(args.out_dir, "inference"))
