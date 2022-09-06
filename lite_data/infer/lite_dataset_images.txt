@@ -1,3 +1,4 @@
+The man with pierced ears is wearing glasses and an orange hat.
 0 flickr30k_001007129816.npz
 1 flickr30k_001104087374.npz
 2 flickr30k_001351500610.npz

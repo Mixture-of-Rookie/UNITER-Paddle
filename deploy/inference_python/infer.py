@@ -35,7 +35,7 @@ class InferenceEngine(object):
         self.args = args
 
         # init inference engine
-        self.predictor, self.config, self.input_tensor, self.output_tensor = self.load_predictor(
+        self.predictor, self.config, self.input_names, self.input_tensor, self.output_names, self.output_tensor = self.load_predictor(
             os.path.join(args.model_dir, "inference.pdmodel"),
             os.path.join(args.model_dir, "inference.pdiparams"))
 
@@ -72,12 +72,14 @@ class InferenceEngine(object):
 
         # get input and output tensor property
         input_names = predictor.get_input_names()
-        input_tensor = predictor.get_input_handle(input_names[0])
+        input_tensor = []
+        for i in range(len(input_names)):
+            input_tensor.append(predictor.get_input_handle(input_names[i]))
 
         output_names = predictor.get_output_names()
         output_tensor = predictor.get_output_handle(output_names[0])
 
-        return predictor, config, input_tensor, output_tensor# }}}
+        return predictor, config, input_names, input_tensor, output_names, output_tensor# }}}
 
     def preprocess(self, data_path):# {{{
         """preprocess
@@ -88,9 +90,10 @@ class InferenceEngine(object):
         """
         data = np.load(data_path)
         data_list = []
-        for k, v in data.items():
-            data_list.append(k)
-            data_list.append(v)
+        for name in self.input_names:
+            if name == 'expand_0.tmp_0':
+                name = 'input_ids'
+            data_list.append(data[name])
         return data_list# }}}
 
     def postprocess(self, x):# {{{
@@ -101,9 +104,8 @@ class InferenceEngine(object):
         Returns: Output data after argmax.
         """
         x = x.flatten()
-        class_id = x.argmax()
-        prob = x[class_id]
-        return class_id, prob# }}}
+        img_id = x.argmax()
+        return img_id# }}}
 
     def run(self, x):# {{{
         """run
@@ -112,7 +114,8 @@ class InferenceEngine(object):
             x: Input data after preprocess.
         Returns: Inference engine output
         """
-        self.input_tensor.copy_from_cpu(x)
+        for i in range(len(self.input_tensor)):
+            self.input_tensor[i].copy_from_cpu(x[i])
         self.predictor.run()
         output = self.output_tensor.copy_to_cpu()
         return output# }}}
@@ -137,7 +140,9 @@ def get_args(add_help=True):# {{{
     parser.add_argument(
         "--batch-size", default=1, type=int, help="batch size")
     parser.add_argument(
-        "--data-path", default="./lite_dataset/lite_dataset.npz")
+        "--data-dir", default="./lite_data/infer")
+    parser.add_argument(
+        "--data-path", default="./lite_data/infer/lite_dataset.npz")
     parser.add_argument(
         "--benchmark", default=False, type=str2bool, help="benchmark")
 
@@ -160,7 +165,7 @@ def infer_main(args):
     if args.benchmark:
         import auto_log
         autolog = auto_log.AutoLogger(
-            model_name="classification",
+            model_name="image-text retrieval",
             batch_size=args.batch_size,
             inference_config=inference_engine.config,
             gpu_ids="auto" if args.use_gpu else None)
@@ -183,17 +188,26 @@ def infer_main(args):
         autolog.times.stamp()
 
     # postprocess
-    class_id, prob = inference_engine.postprocess(output)
+    image_idx = inference_engine.postprocess(output)
+    ann_file = os.path.join(args.data_dir, 'lite_dataset_images.txt')
+    img_db = {}
+    with open(ann_file, 'r') as f:
+        txt_query = f.readline()
+        for img_info in f.readlines():
+            img_idx, img_name = img_info.strip().split(' ')
+            img_db[int(img_idx)] = img_name
 
     if args.benchmark:
         autolog.times.stamp()
         autolog.times.end(stamp=True)
         autolog.report()
 
-    print(f"image_name: {args.img_path}, class_id: {class_id}, prob: {prob}")
-    return class_id, prob
+    print('TxT Query:')
+    print(txt_query)
+    print('Retreival Result:')
+    print(img_db[image_idx])
 
 
 if __name__ == "__main__":
     args = get_args()
-    class_id, prob = infer_main(args)
+    infer_main(args)

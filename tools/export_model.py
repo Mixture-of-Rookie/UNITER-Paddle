@@ -45,6 +45,8 @@ def get_args(add_help=True):
         help='Path to the config file for a specific experiment.')
     parser.add_argument('--out_dir', type=str, default='static',
         help='Path to save the static model.')
+    parser.add_argument('--save-inference-dir', type=str,
+        help='Path to save the static model.')
     args = parser.parse_args()
 
     # Get the default config & merge from cfg_file
@@ -95,12 +97,12 @@ def export(args, cfg):
         model,
         input_spec=[
             {
-            'input_ids': InputSpec(shape=[1, 40], dtype='int64'),
-            'position_ids': InputSpec(shape=[1, 40], dtype='int64'),
-            'img_feat': InputSpec(shape=[1, 60, 2048], dtype='float32'),
-            'img_pos_feat': InputSpec(shape=[1, 60, 7], dtype='float32'),
-            'attn_masks': InputSpec(shape=[1, 100], dtype='int64'),
-            'gather_index': InputSpec(shape=[1, 100], dtype='int64'),
+            'input_ids': InputSpec(shape=[10, 15], dtype='int64'),
+            'position_ids': InputSpec(shape=[1, 15], dtype='int64'),
+            'img_feat': InputSpec(shape=[10, 33, 2048], dtype='float32'),
+            'img_pos_feat': InputSpec(shape=[10, 33, 7], dtype='float32'),
+            'attn_masks': InputSpec(shape=[10, 48], dtype='int64'),
+            'gather_index': InputSpec(shape=[10, 48], dtype='int64'),
             },
             't',
             False,

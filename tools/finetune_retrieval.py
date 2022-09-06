@@ -175,18 +175,18 @@ def main(args, cfg):
                                     collate_fn=itm_rank_hn_collate,
                                     num_workers=cfg['MISC']['NUM_WORKERS'])
 
-    dev_img_db = DetectFeatLmdb(img_dir=cfg['DATASET']['IMG_DIR'])
-    dev_txt_dr = os.path.join(cfg['DATASET']['TXT_DIR'], 'itm_flickr30k_{}.db'.format(cfg['DATASET']['DEV']))
-    dev_txt_db = TxtTokLmdb(db_dir=dev_txt_dr, max_txt_len=-1)
-    dev_dataset = ItmEvalDataset(dev_txt_db, dev_img_db, mini_batch_size=cfg['OPTIMIZATION']['DEV_BATCH_SIZE'])
-    dev_sampler = BatchSampler(dataset=dev_dataset,
-                               batch_size=1,
-                               shuffle=False,
-                               drop_last=False)
-    dev_dataloader = DataLoader(dev_dataset,
-                                batch_sampler=dev_sampler,
-                                collate_fn=itm_eval_collate,
-                                num_workers=cfg['MISC']['NUM_WORKERS'])
+    # dev_img_db = DetectFeatLmdb(img_dir=cfg['DATASET']['IMG_DIR'])
+    # dev_txt_dr = os.path.join(cfg['DATASET']['TXT_DIR'], 'itm_flickr30k_{}.db'.format(cfg['DATASET']['DEV']))
+    # dev_txt_db = TxtTokLmdb(db_dir=dev_txt_dr, max_txt_len=-1)
+    # dev_dataset = ItmEvalDataset(dev_txt_db, dev_img_db, mini_batch_size=cfg['OPTIMIZATION']['DEV_BATCH_SIZE'])
+    # dev_sampler = BatchSampler(dataset=dev_dataset,
+    #                            batch_size=1,
+    #                            shuffle=False,
+    #                            drop_last=False)
+    # dev_dataloader = DataLoader(dev_dataset,
+    #                             batch_sampler=dev_sampler,
+    #                             collate_fn=itm_eval_collate,
+    #                             num_workers=cfg['MISC']['NUM_WORKERS'])
 
     # 3. Build model
     config = os.path.join(cfg['PRETRAINED']['DIR'], cfg['PRETRAINED']['CONFIG'])
