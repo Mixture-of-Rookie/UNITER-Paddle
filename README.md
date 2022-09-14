@@ -97,7 +97,18 @@ python tools/evaluate_retrieval.py --cfg_file configs/retrieval_test.yaml
 # 执行Step5进行测试
 ```
 
-## 六、代码结构与详细说明
+## 六、TIPC
+
+```bash
+# 准备数据和环境
+bash test_tipc/prepare.sh test_tipc/configs/uniter/train_infer_python.txt lite_train_lite_infer
+# test tipc
+bash test_tipc/test_train_inference_python.sh test_tipc/configs/uniter/train_infer_python.txt lite_train_lite_infer
+```
+
+
+
+## 七、代码结构与详细说明
 
 ```bash
 ├── config                    # 默认配置文件夹
@@ -120,7 +131,7 @@ python tools/evaluate_retrieval.py --cfg_file configs/retrieval_test.yaml
 └── requirement.txt           # 依赖包
 ```
 
-## 七、模型信息
+## 八、模型信息
 
 关于模型的其他信息，可以参考下表：
 
