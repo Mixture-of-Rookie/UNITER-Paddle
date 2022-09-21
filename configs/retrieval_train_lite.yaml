@@ -1,0 +1,25 @@
+INPUT:
+  MARGIN: 0.2
+  NEG_SIZE: 1
+  HARD_NEG_SIZE: 1
+
+DATASET:
+  IMG_DIR: './lite_data/train/img_db'
+  TXT_DIR: './lite_data/train/txt_db'
+
+OUTPUT:
+  SAVE_NAME: 'flickr30k_retrieval_lite'
+
+OPTIMIZATION:
+  LR: 5e-05
+  EPOCHS: 1
+  TRN_BATCH_SIZE: 1
+  DEV_BATCH_SIZE: 400
+  WARMUP_STEPS: 500
+  WEIGHT_DECAY: 0.01
+  GRADIENT_ACCUMULATION_STEPS: 1
+
+PRETRAINED:
+  DIR: '/mnt/disk2T/Data/Research/Multi-Modal-Pretraining/2020-UNITER-ECCV/pretrained'
+  CONFIG: 'uniter-large.json'
+  WEIGHTS: 'uniter-large.bin'
