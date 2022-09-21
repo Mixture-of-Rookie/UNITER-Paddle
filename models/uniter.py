@@ -174,7 +174,8 @@ class UniterPreTrainedModel(nn.Layer):# {{{
         for old_key, new_key in zip(old_keys, new_keys):
             state_dict[new_key] = state_dict.pop(old_key)
 
-        model.set_state_dict(state_dict)
+        if len(state_dict) != 0:
+            model.set_state_dict(state_dict)
         return model# }}}
 
 

@@ -65,7 +65,13 @@ def build_model(args, cfg):
         A model whose type is nn.Layer
     """
     config = os.path.join(cfg['PRETRAINED']['DIR'], cfg['PRETRAINED']['CONFIG'])
-    checkpoint = paddle.load(os.path.join(cfg['PRETRAINED']['DIR'], cfg['PRETRAINED']['WEIGHTS']))
+    pretrained_weight = os.path.join(cfg['PRETRAINED']['DIR'], cfg['PRETRAINED']['WEIGHTS'])
+    checkpoint = {}
+    if os.path.isfile(pretrained_weight):
+        checkpoint = paddle.load(pretrained_weight)
+        logger.info('Load pretrained weight from {}'.format(pretrained_weight))
+    else:
+        print('\nPlease Note: the path of pretraiend weight is not exist!')
 
     # List of parameters to be transposed
     transpose_list = ['uniter.embeddings.token_type_embeddings.weight',

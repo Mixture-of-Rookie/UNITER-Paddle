@@ -20,6 +20,6 @@ OPTIMIZATION:
   GRADIENT_ACCUMULATION_STEPS: 1
 
 PRETRAINED:
-  DIR: '/mnt/disk2T/Data/Research/Multi-Modal-Pretraining/2020-UNITER-ECCV/pretrained'
+  DIR: './pretrained_models/'
   CONFIG: 'uniter-large.json'
   WEIGHTS: 'uniter-large.bin'
