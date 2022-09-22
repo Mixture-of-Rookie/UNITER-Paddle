@@ -97,6 +97,27 @@ python tools/evaluate_retrieval.py --cfg_file configs/retrieval_test.yaml
 # 执行Step5进行测试
 ```
 
+### 模型动转静导出
+
+```
+python tools/export_model.py --cfg_file configs/retrieval_train_lite.yaml
+```
+
+最终在`./static/`文件夹下会生成下面的3个文件：
+
+```
+inference_output
+  |----model.pdiparams     : 模型参数文件
+  |----model.pdmodel       : 模型结构文件
+  |----model.pdiparams.info: 模型参数信息文件
+```
+
+### 模型推理
+
+```
+python infer.py --benchmark True
+```
+
 ## 六、TIPC
 
 ```bash
@@ -106,7 +127,11 @@ bash test_tipc/prepare.sh test_tipc/configs/uniter/train_infer_python.txt lite_t
 bash test_tipc/test_train_inference_python.sh test_tipc/configs/uniter/train_infer_python.txt lite_train_lite_infer
 ```
 
-
+> Tips:
+>
+> *  TIPC需安装[AutoLog](https://github.com/LDOUBLEV/AutoLog)。
+>
+> * TIPC需使用develop分支的paddlepaddle，详情见[issue](https://github.com/PaddlePaddle/Paddle/issues/43225#issuecomment-1154764339)。
 
 ## 七、代码结构与详细说明
 
