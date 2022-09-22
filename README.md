@@ -115,7 +115,7 @@ inference_output
 ### 模型推理
 
 ```
-python infer.py --benchmark True
+python deploy/inference_python/infer.py
 ```
 
 ## 六、TIPC
